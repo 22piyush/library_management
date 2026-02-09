@@ -7,6 +7,7 @@ import crypto from "crypto";
 
 export const register = catchAyncErrors(async (req, res) => {
     try {
+
         const { name, email, password } = req.body;
         if (!name || !email || !password) {
             return next(new ErrorHandler("Please enter all fields", 400));
@@ -15,6 +16,13 @@ export const register = catchAyncErrors(async (req, res) => {
         if (isRegistered) {
             return next(new ErrorHandler("User already exists", 400));
         }
+
+        const registerationAttempsByUser = await User.find({
+            email,
+            accountVerified: false
+        });
+
+
     } catch (error) {
 
     }
