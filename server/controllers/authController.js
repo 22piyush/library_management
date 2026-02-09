@@ -12,6 +12,7 @@ export const register = catchAyncErrors(async (req, res) => {
         if (!name || !email || !password) {
             return next(new ErrorHandler("Please enter all fields", 400));
         }
+
         const isRegistered = await User.findOne({ email, accountVerified: true });
         if (isRegistered) {
             return next(new ErrorHandler("User already exists", 400));
@@ -22,8 +23,25 @@ export const register = catchAyncErrors(async (req, res) => {
             accountVerified: false
         });
 
+        if (registerationAttempsByUser.length >= 5) {
+            return next(new ErrorHandler("You have exceeded the number of registration attempts. Please contact support.", 400));
+        }
 
+        if(password.length < 8 || password.length > 16){
+            return next(new ErrorHandler("Password must be 8 to 16 charecters", 400));
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+        });
+
+        const verificationCode = await User.generateVerificationCode();
+        await user.save();
+        sendVerificationCode(verificationCode , email, res);
     } catch (error) {
-
+        next(error)
     }
 });

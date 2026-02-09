@@ -52,4 +52,20 @@ const userSchema = new mongoose.Schema({
 });
 
 
+userSchema.methods.generateVerificationCode = function () {
+    const firstDigit = Math.floor(Math.random() * 9) + 1; // 1–9
+    const remainingDigits = Math.floor(Math.random() * 10000)
+        .toString()
+        .padStart(4, "0"); 
+
+    const verificationCode = parseInt(`${firstDigit}${remainingDigits}`);
+
+    this.verificationCode = verificationCode;
+    this.verificationCodeExpire = Date.now() + 5 * 60 * 1000;
+
+    return verificationCode;
+};
+
+
+
 export const User = mongoose.model("User", userSchema);
