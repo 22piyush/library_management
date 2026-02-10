@@ -59,7 +59,7 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
             accountVerified: false
         }).sort({ createdAt: -1 });
 
-        if (userAllEntries) {
+        if (!userAllEntries) {
             return next(new ErrorHandler("User not found", 404));
         }
 
@@ -101,9 +101,23 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
 
 });
 
-// export const register = catchAyncErrors(async (req, res, next) => {
 
-// });
+
+export const login = catchAyncErrors(async (req, res, next) => {
+
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return next(new ErrorHandler("Please enter all fields", 400));
+        }
+
+        const user = await User.findOne({ email, accountVerified: true });
+
+    } catch (error) {
+        return next(new ErrorHandler("Internal server error", 500));
+    }
+});
 
 
 // export const register = catchAyncErrors(async (req, res, next) => {
