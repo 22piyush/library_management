@@ -6,7 +6,7 @@ import crypto from "crypto";
 import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 
 
-export const register = catchAyncErrors(async (req, res) => {
+export const register = catchAyncErrors(async (req, res, next) => {
     try {
 
         const { name, email, password } = req.body;
@@ -28,7 +28,7 @@ export const register = catchAyncErrors(async (req, res) => {
             return next(new ErrorHandler("You have exceeded the number of registration attempts. Please contact support.", 400));
         }
 
-        if(password.length < 8 || password.length > 16){
+        if (password.length < 8 || password.length > 16) {
             return next(new ErrorHandler("Password must be 8 to 16 charecters", 400));
         }
 
@@ -39,10 +39,56 @@ export const register = catchAyncErrors(async (req, res) => {
             password: hashedPassword,
         });
 
-        const verificationCode = await User.generateVerificationCode();
+        const verificationCode = user.generateVerificationCode();
         await user.save();
-        sendVerificationCode(verificationCode , email, res);
+        sendVerificationCode(verificationCode, email, res);
     } catch (error) {
-        next(error)
+        return next(new ErrorHandler("Internal server error", 500));
     }
 });
+
+
+export const verifyOTP = catchAyncErrors(async (req, res, next) => {
+
+    const { email, otp } = req.body;
+
+    try {
+        const userAllEntries = await User.find({
+            email,
+            accountVerified: false
+        }).sort({ createdAt: -1 });
+
+        if (userAllEntries) {
+            return next(new ErrorHandler("User not found", 404));
+        }
+
+        let user;
+
+        if (userAllEntries.length > 1) {
+            user = userAllEntries[0];
+            await User.deleteMany({
+                _id: { $ne: user._id },
+                email,
+                accountVerified: false
+            });
+        }
+
+    } catch (error) {
+        return next(new ErrorHandler("Internal server error", 500));
+    }
+
+});
+
+// export const register = catchAyncErrors(async (req, res, next) => {
+
+// });
+
+
+// export const register = catchAyncErrors(async (req, res, next) => {
+
+// });
+
+
+// export const register = catchAyncErrors(async (req, res, next) => {
+
+// });

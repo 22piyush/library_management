@@ -6,11 +6,11 @@ export async function sendVerificationCode(verificationCode, email, res) {
     try {
 
         const message = generateVerificationOtpEmailTemplate(verificationCode)
-        sendEmail({
+        await sendEmail(
             email,
-            subject: "Verification Code (Bookware Library Management System)",
-            message,
-        });
+            "Verification Code (Bookware Library Management System)",
+            message
+        );
 
         res.status(200).json({
             success: false,
