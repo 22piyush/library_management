@@ -105,14 +105,25 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
 
 export const login = catchAyncErrors(async (req, res, next) => {
 
-    const { email, password } = req.body;
+    console.log(req.body);
+
 
     try {
+
+        const { email, password } = req.body;
         if (!email || !password) {
             return next(new ErrorHandler("Please enter all fields", 400));
         }
 
-        const user = await User.findOne({ email, accountVerified: true });
+        const user = await User.findOne({ email, accountVerified: true }).select("+password");
+
+        const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordMatched || !user) {
+            return next(new ErrorHandler("Invalid email or password", 400));
+        }
+
+        sendToken(user, 200, "User login successfully", res);
 
     } catch (error) {
         return next(new ErrorHandler("Internal server error", 500));
@@ -120,9 +131,18 @@ export const login = catchAyncErrors(async (req, res, next) => {
 });
 
 
-// export const register = catchAyncErrors(async (req, res, next) => {
 
-// });
+export const logout = catchAyncErrors(async (req, res, next) => {
+
+    res.status(200).cookie("token", "", {
+        expires: new Date(Date.now()),
+        httpOnly: true
+    }).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+
+});
 
 
 // export const register = catchAyncErrors(async (req, res, next) => {
