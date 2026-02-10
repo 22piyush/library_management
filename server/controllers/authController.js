@@ -2,9 +2,9 @@ import { catchAyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorMiddlewares.js";
 import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 import { sendToken } from "../utils/sendToken.js";
+import { generateVerificationOtpEmailTemplate } from "../utils/emailTemplates.js";
 
 
 export const register = catchAyncErrors(async (req, res, next) => {
@@ -150,4 +150,45 @@ export const getUser = catchAyncErrors(async (req, res, next) => {
         success: true,
         user
     });
+});
+
+
+export const forgotPassword = catchAyncErrors(async (req, res, next) => {
+
+    const user = await User.findOne({
+        email: req.body.email,
+        accountVerified: true
+    });
+
+    if (!user) {
+        return next(new ErrorHandler("Invalid email", 400));
+    }
+
+    const resetToken = user.getResetPasswordToken();
+
+    await user.save({ validationBeforeSave: false });
+
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+
+    const message = generateForgotPasswordEmailTemplate(resetPasswordUrl);
+
+    try {
+
+        await sendEmail({
+            email: user.email,
+            subject: "Bookware Library Management system Password Recovry",
+            message
+        });
+        res.status(200).json({
+            success: true,
+            message: `Email sent to ${user.email} successfully`
+        });
+
+    } catch (error) {
+
+        user.resetPasswordToken = undefined,
+        user.resetPasswordExpire = undefined,
+        await user.save({ validateBeforeSave: false });
+        return next(new ErrorHandler(error.message, 500));
+    }
 });
