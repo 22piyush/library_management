@@ -71,7 +71,28 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
                 email,
                 accountVerified: false
             });
+        } else {
+            user = userAllEntries[0];
         }
+
+        if (user.verificationCode !== Number(otp)) {
+            return next(new ErrorHandler("Invalid OTP", 400));
+        }
+
+        const currentTime = Date.now();
+
+        const verificationCodeExpire = new Date(user.verificationCodeExpire).getTime();
+
+        if (currentTime > verificationCodeExpire) {
+            return next(new ErrorHandler("OTP expired", 400));
+        }
+
+        user.accountVerified = true;
+        user.verificationCode = null;
+        user.verificationCodeExpire = null;
+        await user.save({ validateModifiedOnly: true });
+
+        sendToken(user, 200, "Account Verified", res);
 
     } catch (error) {
         return next(new ErrorHandler("Internal server error", 500));
