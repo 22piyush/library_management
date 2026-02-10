@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -69,9 +70,16 @@ userSchema.methods.generateVerificationCode = function () {
 
 userSchema.methods.generateToken = function () {
 
-    return jwt.sign({id: this._id}, process.env.JWT_SECRET_KEY, {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRE,
     });
+
+};
+
+
+userSchema.methods.getResetPasswordToken = function () {
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    
 
 };
 

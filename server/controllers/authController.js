@@ -4,7 +4,7 @@ import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 import { sendToken } from "../utils/sendToken.js";
-import { generateVerificationOtpEmailTemplate } from "../utils/emailTemplates.js";
+import { generateForgotPasswordEmailTemplate, generateVerificationOtpEmailTemplate } from "../utils/emailTemplates.js";
 
 
 export const register = catchAyncErrors(async (req, res, next) => {
