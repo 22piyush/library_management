@@ -102,7 +102,6 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
 });
 
 
-
 export const login = catchAyncErrors(async (req, res, next) => {
 
     console.log(req.body);
@@ -131,7 +130,6 @@ export const login = catchAyncErrors(async (req, res, next) => {
 });
 
 
-
 export const logout = catchAyncErrors(async (req, res, next) => {
 
     res.status(200).cookie("token", "", {
@@ -145,6 +143,11 @@ export const logout = catchAyncErrors(async (req, res, next) => {
 });
 
 
-// export const register = catchAyncErrors(async (req, res, next) => {
+export const getUser = catchAyncErrors(async (req, res, next) => {
+    const user = req.user;
 
-// });
+    res.status(200).json({
+        success: true,
+        user
+    });
+});
