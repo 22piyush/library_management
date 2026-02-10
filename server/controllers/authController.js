@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 import { sendToken } from "../utils/sendToken.js";
 import { generateForgotPasswordEmailTemplate, generateVerificationOtpEmailTemplate } from "../utils/emailTemplates.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 
 export const register = catchAyncErrors(async (req, res, next) => {
@@ -155,6 +156,10 @@ export const getUser = catchAyncErrors(async (req, res, next) => {
 
 export const forgotPassword = catchAyncErrors(async (req, res, next) => {
 
+    if (!req.body.email) {
+        return next(new ErrorHandler("Email is required", 500));
+    }
+
     const user = await User.findOne({
         email: req.body.email,
         accountVerified: true
@@ -174,11 +179,11 @@ export const forgotPassword = catchAyncErrors(async (req, res, next) => {
 
     try {
 
-        await sendEmail({
-            email: user.email,
-            subject: "Bookware Library Management system Password Recovry",
+        await sendEmail(
+            user.email,
+            "Bookware Library Management system Password Recovry",
             message
-        });
+        );
         res.status(200).json({
             success: true,
             message: `Email sent to ${user.email} successfully`
@@ -187,8 +192,43 @@ export const forgotPassword = catchAyncErrors(async (req, res, next) => {
     } catch (error) {
 
         user.resetPasswordToken = undefined,
-        user.resetPasswordExpire = undefined,
-        await user.save({ validateBeforeSave: false });
+            user.resetPasswordExpire = undefined,
+            await user.save({ validateBeforeSave: false });
         return next(new ErrorHandler(error.message, 500));
     }
+});
+
+
+export const resetPassword = catchAyncErrors(async (req, res, next) => {
+
+    const token = req.params;
+    const resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        return next(new ErrorHandler("Reset password token is invalid or has been expired", 400));
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+        return next(new ErrorHandler("Password and confirm password do not matched", 400));
+    }
+
+    if (req.body.password < 8 || req.body.password > 16 || req.body.confirmPassword < 8 || req.body.confirmPassword > 16) {
+        return next(new ErrorHandler("Password must be between 8 and 16 charecter", 400));
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    user.password = hashedPassword;
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    sendToken(user, 200, "Password reset successfully", res);
+
 });
