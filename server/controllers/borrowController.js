@@ -21,7 +21,7 @@ export const borrowedBooks = catchAyncErrors(async (req, res, next) => {
 export const recordBorrowedBooks = catchAyncErrors(async (req, res, next) => {
 
     const { id } = req.params;
-    const { email } = req.user;
+    const { email } = req.body;
 
     if (!id || !email) {
         return next(new ErrorHandler("Book ID and Email are required", 400));
