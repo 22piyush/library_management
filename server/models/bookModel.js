@@ -16,7 +16,20 @@ const bookSchema = new mongoose.Schema({
         required: true,
     },
     price: {
-        type: String,
+        type: Number,
+        required: true,
+    },
+    quantity: {
+        type: Number,
+        required: true,
+    },
+    availability: {
+        type: Boolean,
         required: true,
     }
+},{
+    timestamps: true,
 });
+
+
+export const Book = mongoose.model("Book", bookSchema);
