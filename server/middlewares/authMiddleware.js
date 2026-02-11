@@ -15,3 +15,11 @@ export const isAuthenticate = catchAyncErrors(async (req, resizeBy, next) => {
     req.user = await User.findById(decoded.id)
     next();
 });
+
+
+
+export const isAuthorized = (...roles) => {
+    return(req,res,next)=>{
+        if(roles.includes){}
+    }
+};
