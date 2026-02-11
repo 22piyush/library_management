@@ -2,7 +2,6 @@ import express from "express"
 import { isAuthenticate, isAuthorized } from "../middlewares/authMiddleware.js";
 import { recordBorrowedBooks, borrowedBooks, getBorrowedBooksForAdmin, returnedBorrowdBook } from "../controllers/borrowController.js";
 
-
 const router = express.Router();
 
 router.post("/record-borrow-book/:id", isAuthenticate, isAuthorized("Admin"), recordBorrowedBooks);

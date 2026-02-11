@@ -7,55 +7,55 @@ import { Borrow } from "../models/borrowModel.js";
 
 export const borrowedBooks = catchAyncErrors(async (req, res, next) => {
 
-    const { bookId } = req.body;
+    // const { bookId } = req.body;
 
-    if (!bookId) {
-        return next(new ErrorHandler("Book ID is required", 400));
-    }
+    // if (!bookId) {
+    //     return next(new ErrorHandler("Book ID is required", 400));
+    // }
 
-    const book = await Book.findById(bookId);
+    // const book = await Book.findById(bookId);
 
-    if (!book) {
-        return next(new ErrorHandler("Book not found", 404));
-    }
+    // if (!book) {
+    //     return next(new ErrorHandler("Book not found", 404));
+    // }
 
-    if (book.quantity <= 0) {
-        return next(new ErrorHandler("Book is out of stock", 400));
-    }
+    // if (book.quantity <= 0) {
+    //     return next(new ErrorHandler("Book is out of stock", 400));
+    // }
 
-    const alreadyBorrowed = await Borrow.findOne({
-        "user.id": req.user._id,
-        book: bookId,
-        returnDate: { $exists: false }
-    });
+    // const alreadyBorrowed = await Borrow.findOne({
+    //     "user.id": req.user._id,
+    //     book: bookId,
+    //     returnDate: { $exists: false }
+    // });
 
-    if (alreadyBorrowed) {
-        return next(new ErrorHandler("You already borrowed this book", 400));
-    }
+    // if (alreadyBorrowed) {
+    //     return next(new ErrorHandler("You already borrowed this book", 400));
+    // }
 
-    const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 7);
+    // const dueDate = new Date();
+    // dueDate.setDate(dueDate.getDate() + 7);
 
-    book.quantity -= 1;
-    book.availability = book.quantity > 0;
-    await book.save();
+    // book.quantity -= 1;
+    // book.availability = book.quantity > 0;
+    // await book.save();
 
-    const borrow = await Borrow.create({
-        user: {
-            id: req.user._id,
-            name: req.user.name,
-            email: req.user.email
-        },
-        price: book.price,
-        book: book._id,
-        dueDate
-    });
+    // const borrow = await Borrow.create({
+    //     user: {
+    //         id: req.user._id,
+    //         name: req.user.name,
+    //         email: req.user.email
+    //     },
+    //     price: book.price,
+    //     book: book._id,
+    //     dueDate
+    // });
 
-    res.status(201).json({
-        success: true,
-        message: "Book borrowed successfully",
-        borrow
-    });
+    // res.status(201).json({
+    //     success: true,
+    //     message: "Book borrowed successfully",
+    //     borrow
+    // });
 
 });
 
@@ -106,7 +106,7 @@ export const recordBorrowedBooks = catchAyncErrors(async (req, res, next) => {
         returned: false
     });
 
-    await user.save(); 
+    await user.save();
 
     const borrow = await Borrow.create({
         user: {
@@ -127,12 +127,76 @@ export const recordBorrowedBooks = catchAyncErrors(async (req, res, next) => {
 
 });
 
+export const returnedBorrowdBook = catchAyncErrors(async (req, res, next) => {
+
+    const { bookId } = req.params;
+    const { email } = req.body;
+
+    if (!bookId || !email) {
+        return next(new ErrorHandler("Book ID and Email are required", 400));
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+    }
+
+    // 2️⃣ Find book
+    const book = await Book.findById(bookId);
+    if (!book) {
+        return next(new ErrorHandler("Book not found", 404));
+    }
+
+    const borrowRecord = await Borrow.findOne({
+        "user.id": user._id,
+        book: bookId,
+        returnDate: { $exists: false }
+    });
+
+    if (!borrowRecord) {
+        return next(new ErrorHandler("No active borrow record found", 404));
+    }
+
+    const today = new Date();
+    let fine = 0;
+
+    if (today > borrowRecord.dueDate) {
+        const lateDays = Math.ceil(
+            (today - borrowRecord.dueDate) / (1000 * 60 * 60 * 24)
+        );
+        fine = lateDays * 10;
+    }
+
+    borrowRecord.returnDate = today;
+    borrowRecord.fine = fine;
+    await borrowRecord.save();
+
+    book.quantity += 1;
+    book.availability = true;
+    await book.save();
+
+    const userBorrow = user.borrowedBooks.find(
+        (b) => b.bookId.toString() === bookId && b.returned === false
+    );
+
+    if (userBorrow) {
+        userBorrow.returned = true;
+        userBorrow.returnDate = today;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Book returned successfully",
+        fine
+    });
+
+});
+
 
 export const getBorrowedBooksForAdmin = catchAyncErrors(async (req, res, next) => {
 
 });
 
 
-export const returnedBorrowdBook = catchAyncErrors(async (req, res, next) => {
-
-});
