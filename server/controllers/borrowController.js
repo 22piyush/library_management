@@ -7,55 +7,13 @@ import { Borrow } from "../models/borrowModel.js";
 
 export const borrowedBooks = catchAyncErrors(async (req, res, next) => {
 
-    // const { bookId } = req.body;
+    const { borrowedBooks } = req.user;
 
-    // if (!bookId) {
-    //     return next(new ErrorHandler("Book ID is required", 400));
-    // }
-
-    // const book = await Book.findById(bookId);
-
-    // if (!book) {
-    //     return next(new ErrorHandler("Book not found", 404));
-    // }
-
-    // if (book.quantity <= 0) {
-    //     return next(new ErrorHandler("Book is out of stock", 400));
-    // }
-
-    // const alreadyBorrowed = await Borrow.findOne({
-    //     "user.id": req.user._id,
-    //     book: bookId,
-    //     returnDate: { $exists: false }
-    // });
-
-    // if (alreadyBorrowed) {
-    //     return next(new ErrorHandler("You already borrowed this book", 400));
-    // }
-
-    // const dueDate = new Date();
-    // dueDate.setDate(dueDate.getDate() + 7);
-
-    // book.quantity -= 1;
-    // book.availability = book.quantity > 0;
-    // await book.save();
-
-    // const borrow = await Borrow.create({
-    //     user: {
-    //         id: req.user._id,
-    //         name: req.user.name,
-    //         email: req.user.email
-    //     },
-    //     price: book.price,
-    //     book: book._id,
-    //     dueDate
-    // });
-
-    // res.status(201).json({
-    //     success: true,
-    //     message: "Book borrowed successfully",
-    //     borrow
-    // });
+    res.status(200).json({
+        success: true,
+        message: "Book borrowed successfully",
+        borrowedBooks
+    });
 
 });
 
@@ -106,7 +64,7 @@ export const recordBorrowedBooks = catchAyncErrors(async (req, res, next) => {
         returned: false
     });
 
-    await user.save();
+    await user.save(); 
 
     const borrow = await Borrow.create({
         user: {
@@ -196,6 +154,13 @@ export const returnedBorrowdBook = catchAyncErrors(async (req, res, next) => {
 
 
 export const getBorrowedBooksForAdmin = catchAyncErrors(async (req, res, next) => {
+
+    const borrowedBooks = await Borrow.find();
+
+    res.status(200).json({
+        success: true,
+        borrowedBooks
+    });
 
 });
 
