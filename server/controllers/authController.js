@@ -217,7 +217,7 @@ export const resetPassword = catchAyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Password and confirm password do not matched", 400));
     }
 
-    if (req.body.password < 8 || req.body.password > 16 || req.body.confirmPassword < 8 || req.body.confirmPassword > 16) {
+    if (req.body.password.length < 8 || req.body.password.length > 16 || req.body.confirmPassword.length < 8 || req.body.confirmPassword.length > 16) {
         return next(new ErrorHandler("Password must be between 8 and 16 charecter", 400));
     }
 
@@ -230,5 +230,40 @@ export const resetPassword = catchAyncErrors(async (req, res, next) => {
     await user.save();
 
     sendToken(user, 200, "Password reset successfully", res);
+
+});
+
+
+export const updatePassword = catchAyncErrors(async (req, res, next) => {
+
+    const user = await User.findById(req.user._id).select("+password");
+
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+        return next(new ErrorHandler("Please enter all fields", 400));
+    }
+
+    const isPasswordMatched = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isPasswordMatched) {
+        return next(new ErrorHandler("Current password is incorrect", 400));
+    }
+
+    if (newPassword.length < 8 || newPassword.length > 16) {
+        return next(new ErrorHandler("Password must be between 8 and 16 characters", 400));
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        return next(new ErrorHandler("New and Confirm password do not match", 400));
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Password updated successfully"
+    });
 
 });
