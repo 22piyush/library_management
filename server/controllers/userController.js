@@ -72,6 +72,7 @@ export const registerNewAdmin = catchAyncErrors(async (req, res, next) => {
         email,
         password: hashedPassword,
         role: "admin",
+        accountVerified: true,
         avatar: {
             public_id: result.public_id,
             url: result.secure_url
