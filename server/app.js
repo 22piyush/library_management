@@ -11,6 +11,7 @@ import borrowRouter from "./routes/borrowRouter.js"
 import { connectionCloudinary } from "./config/cloudinary.js";
 import fileUpload from "express-fileupload";
 import { notifyUsers } from "./services/notifyUsers.js";
+import { removeUnverifiedAccounts } from "./services/removeUnverifiedAccount.js";
 
 config();
 export const app = express();
@@ -37,7 +38,8 @@ app.use("/api/v1/book", bookRouter);
 app.use("/api/v1/borrow", borrowRouter);
 app.use("/api/v1/users", userRouter);
 
-notifyUsers()
+notifyUsers();
+removeUnverifiedAccounts();
 connectDB();
 connectionCloudinary();
 
