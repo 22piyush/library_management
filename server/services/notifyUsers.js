@@ -7,7 +7,6 @@ export const notifyUsers = () => {
 
     // Run daily at 9 AM
     cron.schedule("0 9 * * *", async () => {
-        console.log("Running daily notification job...");
 
         try {
 
@@ -39,7 +38,7 @@ export const notifyUsers = () => {
                     sendEmail(
                         email,
                         "Book Return Reminder",
-                        `Hello ${borrow.user.name},\n\nThis is reminder that the book you borrowed is due for`
+                        `Hello ${borrow.user.name},\n\nThis is reminder that the book you borrowed is due for return today. Please return the book to the library as soon as possible`
                     );
                 }
             }
