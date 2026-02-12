@@ -8,7 +8,7 @@ import authRouter from "./routes/authRouter.js"
 import bookRouter from "./routes/bookRouter.js"
 import userRouter from "./routes/userRouter.js"
 import borrowRouter from "./routes/borrowRouter.js"
-import {connectionCloudinary} from "./config/cloudinary.js";
+import { connectionCloudinary } from "./config/cloudinary.js";
 import fileUpload from "express-fileupload";
 import { notifyUsers } from "./services/notifyUsers.js";
 
