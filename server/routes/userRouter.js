@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.get("/all", isAuthenticate, isAuthorized("Admin"), getAllUsers);
-router.get("/add/new-admin", isAuthenticate, isAuthorized("Admin"), registerNewAdmin);
+router.post("/add/new-admin", isAuthenticate, isAuthorized("Admin"), registerNewAdmin);
 
 
 export default router;

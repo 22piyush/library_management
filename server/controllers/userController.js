@@ -1,9 +1,9 @@
 import { catchAyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorMiddlewares.js";
 import { User } from "../models/userModel.js";
-import cloudinary from "../config/cloudinary.js";
+import { cloudinary } from "../config/cloudinary.js";
 import fs from "fs";
-import { decrypt } from "dotenv";
+import bcrypt from "bcrypt"
 
 export const getAllUsers = catchAyncErrors(async (req, res, next) => {
 
@@ -54,7 +54,7 @@ export const registerNewAdmin = catchAyncErrors(async (req, res, next) => {
         );
     }
 
-    const hashedPassword = await decrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await cloudinary.uploader.upload(
         avatar.tempFilePath,
@@ -71,7 +71,7 @@ export const registerNewAdmin = catchAyncErrors(async (req, res, next) => {
         name,
         email,
         password: hashedPassword,
-        role: "admin",
+        role: "Admin",
         accountVerified: true,
         avatar: {
             public_id: result.public_id,
