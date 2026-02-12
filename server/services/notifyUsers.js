@@ -40,6 +40,8 @@ export const notifyUsers = () => {
                         "Book Return Reminder",
                         `Hello ${borrow.user.name},\n\nThis is reminder that the book you borrowed is due for return today. Please return the book to the library as soon as possible.`
                     );
+                    borrow.notified = true;
+                    await borrow.save();
                 }
             }
 
