@@ -36,11 +36,11 @@ export const notifyUsers = () => {
             for (const borrow of dueBorrows) {
                 if (borrow.user && borrow.user.email) {
                     const user = await User.findById(borrow.user.id);
-                    sendEmail({
+                    sendEmail(
                         email,
-                        subject: "Book Return Reminder",
-                        message: `Hello ${borrow.user.name},\n\nThis is reminder that the book you borrowed is due for`
-                    });
+                        "Book Return Reminder",
+                        `Hello ${borrow.user.name},\n\nThis is reminder that the book you borrowed is due for`
+                    );
                 }
             }
 
