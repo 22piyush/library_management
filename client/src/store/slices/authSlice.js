@@ -38,6 +38,6 @@ export const register = (data) => async(dispatch) => {
             "Content-Type": "application/json",
         }
     }).then(res => {
-
-    })
+        dispatch(authSlice.actions.registerSuccess())
+    });
 }
