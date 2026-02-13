@@ -67,7 +67,7 @@ const authSlice = createSlice({
         logoutSuccess(state, action) {
             state.loading = false;
             state.message = action.payload;
-            state.isAuthenticated = true;
+            state.isAuthenticated = false;
             state.user = null;
         },
         logoutFailed(state, action) {
@@ -76,13 +76,29 @@ const authSlice = createSlice({
             state.message = null;
         },
 
+        getUserRequest(state, action) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        getUserSuccess(state, action) {
+            state.loading = false;
+            state.isAuthenticated = true;
+            state.user = action.payload.user;
+        },
+        getUserFailed(state) {
+            state.loading = false;
+            state.isAuthenticated = false;
+            state.user = null;
+        },
+
 
         resetAuthSlice(state) {
             state.error = null;
             state.loading = false;
             state.message = null;
             state.user = null;
-            state.isAuthenticated = state.isAuthenticated
+            // state.isAuthenticated = state.isAuthenticated
         }
     },
 });
@@ -150,5 +166,20 @@ export const logout = () => async (dispatch) => {
         dispatch(authSlice.actions.resetAuthSlice());
     }).catch(error => {
         dispatch(authSlice.actions.logoutFailed(error.response.data.message));
+    })
+};
+
+
+export const getUser = () => async (dispatch) => {
+    dispatch(authSlice.actions.getUserRequest());
+    await axios.get("http://localhost:8080/api/v1/auth/me", {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => {
+        dispatch(authSlice.actions.getUserSuccess(res.data));
+    }).catch(error => {
+        dispatch(authSlice.actions.getUserFailed(error.response.data.message));
     })
 };
