@@ -25,6 +25,7 @@ const authSlice = createSlice({
             state.error = action.payload;
         },
 
+
         otpVerificationRequest(state) {
             state.loading = true;
             state.error = null;
@@ -40,6 +41,7 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+
 
 
         loginRequest(state) {
@@ -59,6 +61,7 @@ const authSlice = createSlice({
         },
 
 
+
         logoutRequest(state) {
             state.loading = true;
             state.error = null;
@@ -76,6 +79,8 @@ const authSlice = createSlice({
             state.message = null;
         },
 
+
+
         getUserRequest(state, action) {
             state.loading = true;
             state.error = null;
@@ -91,6 +96,57 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
         },
+
+
+        // FORGOT PASSWORD
+        forgotPasswordRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        forgotPasswordSuccess(state, action) {
+            state.loading = false;
+            state.message = action.payload.message;
+        },
+        forgotPasswordFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+
+        // UPDATE PASSWORD
+        updatePasswordRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        updatePasswordSuccess(state, action) {
+            state.loading = false;
+            state.message = action.payload.message;
+        },
+        updatePasswordFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+
+
+
+        // RESET PASSWORD
+        resetPasswordRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        resetPasswordSuccess(state, action) {
+            state.loading = false;
+            state.message = action.payload.message;
+            state.user = action.payload.user;
+            state.isAuthenticated = true;
+        },
+        resetPasswordFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+
 
 
         resetAuthSlice(state) {
@@ -182,4 +238,76 @@ export const getUser = () => async (dispatch) => {
     }).catch(error => {
         dispatch(authSlice.actions.getUserFailed(error.response.data.message));
     })
+};
+
+
+export const forgotPassword = (email) => async (dispatch) => {
+    dispatch(authSlice.actions.forgotPasswordRequest());
+
+    await axios.post(
+        "http://localhost:8080/api/v1/auth/password/forgot",
+        { email },
+        {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        }
+    )
+        .then(res => {
+            dispatch(authSlice.actions.forgotPasswordSuccess(res.data));
+        })
+        .catch(error => {
+            dispatch(
+                authSlice.actions.forgotPasswordFailed(
+                    error.response?.data?.message || "Something went wrong"
+                )
+            );
+        });
+};
+
+
+export const updatePassword = (data) => async (dispatch) => {
+    dispatch(authSlice.actions.updatePasswordRequest());
+
+    await axios.put(
+        "http://localhost:8080/api/v1/auth/password/update",
+        data,
+        {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        }
+    )
+        .then(res => {
+            dispatch(authSlice.actions.updatePasswordSuccess(res.data));
+        })
+        .catch(error => {
+            dispatch(
+                authSlice.actions.updatePasswordFailed(
+                    error.response?.data?.message || "Something went wrong"
+                )
+            );
+        });
+};
+
+
+export const resetPassword = (data, token) => async (dispatch) => {
+    dispatch(authSlice.actions.resetPasswordRequest());
+
+    await axios.put(
+        `http://localhost:8080/api/v1/auth/password/reset/${token}`,
+        data,
+        {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        }
+    )
+        .then(res => {
+            dispatch(authSlice.actions.resetPasswordSuccess(res.data));
+        })
+        .catch(error => {
+            dispatch(
+                authSlice.actions.resetPasswordFailed(
+                    error.response?.data?.message || "Something went wrong"
+                )
+            );
+        });
 };
