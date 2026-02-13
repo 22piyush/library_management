@@ -24,13 +24,12 @@ const authSlice = createSlice({
         registerFailed(state, action) {
             state.loading = false;
             state.error = action.payload;
-            state.message = action.payload.message;
         },
     },
 });
 
 
-export const register = (data) => async(dispatch) => {
+export const register = (data) => async (dispatch) => {
     dispatch(authSlice.actions.registerRequest());
     await axios.post("", data, {
         withCredentials: true,
@@ -38,6 +37,8 @@ export const register = (data) => async(dispatch) => {
             "Content-Type": "application/json",
         }
     }).then(res => {
-        dispatch(authSlice.actions.registerSuccess())
-    });
+        dispatch(authSlice.actions.registerSuccess(res.data));
+    }).catch(error => {
+        dispatch(authSlice.actions.registerFailed(error.response.data.message));
+    })
 }
