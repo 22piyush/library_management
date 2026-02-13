@@ -81,7 +81,7 @@ const authSlice = createSlice({
 
 
 
-        getUserRequest(state, action) {
+        getUserRequest(state) {
             state.loading = true;
             state.error = null;
             state.message = null;
@@ -311,3 +311,9 @@ export const resetPassword = (data, token) => async (dispatch) => {
             );
         });
 };
+
+
+
+
+
+export default authSlice.reducer;
