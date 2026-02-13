@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { act } from "react";
 
 const authSlice = createSlice({
     name: "auth",
@@ -67,16 +66,31 @@ const authSlice = createSlice({
         },
         logoutSuccess(state, action) {
             state.loading = false;
-            state.message = action.payload.message;
+            state.message = action.payload;
             state.isAuthenticated = true;
-            state.user = action.payload.user;
+            state.user = null;
         },
         logoutFailed(state, action) {
             state.loading = false;
             state.error = action.payload;
+            state.message = null;
         },
+
+
+        resetAuthSlice(state) {
+            state.error = null;
+            state.loading = false;
+            state.message = null;
+            state.user = null;
+            state.isAuthenticated = state.isAuthenticated
+        }
     },
 });
+
+
+export const resetAuthSlice = () => (dispatch) => {
+    dispatch(authSlice.actions.resetAuthSlice())
+}
 
 
 export const register = (data) => async (dispatch) => {
@@ -126,13 +140,14 @@ export const login = (data) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
     dispatch(authSlice.actions.logoutRequest());
-    await axios.get("http://localhost:8080/api/v1/auth/logout",{
+    await axios.get("http://localhost:8080/api/v1/auth/logout", {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
         }
     }).then(res => {
-        dispatch(authSlice.actions.logoutSuccess(res.data));
+        dispatch(authSlice.actions.logoutSuccess(res.data.message));
+        dispatch(authSlice.actions.resetAuthSlice());
     }).catch(error => {
         dispatch(authSlice.actions.logoutFailed(error.response.data.message));
     })
