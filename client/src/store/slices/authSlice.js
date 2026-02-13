@@ -58,13 +58,30 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+
+
+        logoutRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        logoutSuccess(state, action) {
+            state.loading = false;
+            state.message = action.payload.message;
+            state.isAuthenticated = true;
+            state.user = action.payload.user;
+        },
+        logoutFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
     },
 });
 
 
-export const register = (email, otp) => async (dispatch) => {
+export const register = (data) => async (dispatch) => {
     dispatch(authSlice.actions.registerRequest());
-    await axios.post("http://localhost:8080/api/v1/auth/register", { email, otp }, {
+    await axios.post("http://localhost:8080/api/v1/auth/register", data, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -77,9 +94,9 @@ export const register = (email, otp) => async (dispatch) => {
 };
 
 
-export const otpVerification = (data) => async (dispatch) => {
+export const otpVerification = (email, otp) => async (dispatch) => {
     dispatch(authSlice.actions.otpVerificationRequest());
-    await axios.post("http://localhost:8080/api/v1/auth/verify-otp", data, {
+    await axios.post("http://localhost:8080/api/v1/auth/verify-otp", { email, otp }, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -94,7 +111,7 @@ export const otpVerification = (data) => async (dispatch) => {
 
 export const login = (data) => async (dispatch) => {
     dispatch(authSlice.actions.loginRequest());
-    await axios.post("http://localhost:8080/api/v1/auth/verify-otp", data, {
+    await axios.post("http://localhost:8080/api/v1/auth/login", data, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -103,5 +120,20 @@ export const login = (data) => async (dispatch) => {
         dispatch(authSlice.actions.loginSuccess(res.data));
     }).catch(error => {
         dispatch(authSlice.actions.loginFailed(error.response.data.message));
+    })
+};
+
+
+export const logout = () => async (dispatch) => {
+    dispatch(authSlice.actions.logoutRequest());
+    await axios.get("http://localhost:8080/api/v1/auth/logout",{
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => {
+        dispatch(authSlice.actions.logoutSuccess(res.data));
+    }).catch(error => {
+        dispatch(authSlice.actions.logoutFailed(error.response.data.message));
     })
 };
