@@ -3,6 +3,12 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Sidebar from "../layout/Sidebar";
+import UserDashboard from "../components/UserDashboard";
+import AdminDashboard from "../components/AdminDashboard";
+import BookManagement from "../components/BookManagement";
+import Catalog from "../components/Catalog";
+import Users from "../components/Users";
+import MyBorrowedBooks from "../components/MyBorrowedBooks";
 
 function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,10 +37,33 @@ function Home() {
         setselectedComponent={selectedComponent}
       />
 
-      {
-        ()
-      }
+      {(() => {
+        switch (selectedComponent) {
+          case "Dashboard":
+            return user?.role === "User" ? (
+              <UserDashboard />
+            ) : (
+              <AdminDashboard />
+            );
 
+          case "Books":
+            return <BookManagement />;
+
+          case "Catalog":
+            return user?.role === "Admin" ? <Catalog /> : null;
+
+          case "Users":
+            return user?.role === "Admin" ? <Users /> : null;
+
+          case "My Borrowed Books":
+            return user?.role === "User" ? <MyBorrowedBooks /> : null;
+
+          default:
+            return null;
+        }
+      })()}
+
+      
     </div>
   );
 }
