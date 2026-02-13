@@ -47,7 +47,7 @@ const authSlice = createSlice({
 
 export const register = (email, otp) => async (dispatch) => {
     dispatch(authSlice.actions.registerRequest());
-    await axios.post("", { email, otp }, {
+    await axios.post("http://localhost:8080/api/v1/auth/register", { email, otp }, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -60,10 +60,9 @@ export const register = (email, otp) => async (dispatch) => {
 };
 
 
-
 export const otpVerification = (data) => async (dispatch) => {
     dispatch(authSlice.actions.otpVerificationRequest());
-    await axios.post("", data, {
+    await axios.post("http://localhost:8080/api/v1/auth/verify-otp", data, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
