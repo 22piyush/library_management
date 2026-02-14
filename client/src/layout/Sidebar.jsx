@@ -10,9 +10,12 @@ import { RiAdminFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
+import { toggleAddNewAdminPopup } from "../store/slices/popUpSlice";
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) {
   const dispatch = useDispatch();
+
+  const { addNewAdminPopup } = useSelector((state) => state.popup);
 
   const { error, message, user, isAuthenticated } = useSelector(
     (state) => state.auth,
@@ -125,6 +128,14 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) {
               >
                 <UsersIcon />
                 <span>Users</span>
+              </div>
+
+              <div
+                className={menuItemClass}
+                onClick={() => dispatch(toggleAddNewAdminPopup())}
+              >
+                <RiAdminFill />
+                <span>Add New Admin</span>
               </div>
             </>
           )}
