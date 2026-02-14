@@ -36,7 +36,14 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen, setselectedComponent }) {
     }
   }, [dispatch, isAuthenticated, error, loading, message]);
 
-  return <div></div>;
+  return (
+    <div>
+      <aside className={`${isSidebarOpen ? "left-0" : "-left-full"} z-10 transition-all duration-700 md:relative md:left-0 flex w-64 bg-black text-white flex-col h-full `} >
+
+          dfadf
+      </aside>
+    </div>
+  );
 }
 
 export default Sidebar;
