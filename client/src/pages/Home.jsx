@@ -34,7 +34,7 @@ function Home() {
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-        setselectedComponent={selectedComponent}
+        setselectedComponent={setselectedComponent}
       />
 
       {(() => {

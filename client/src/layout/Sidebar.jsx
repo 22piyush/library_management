@@ -1,28 +1,25 @@
 import React, { useEffect } from "react";
-
-import { FaSignOutAlt as logoutIcon } from "react-icons/fa";
-import { MdDashboard as dashboardIcon } from "react-icons/md";
-import { FaBook as bookIcon } from "react-icons/fa";
-import { GiBookshelf as catalogIcon } from "react-icons/gi";
-import { MdSettings as settingIcon } from "react-icons/md";
-import { FaUsers as usersIcon } from "react-icons/fa";
-import { AiOutlineClose as closeIcon } from "react-icons/ai";
-import { BiBookContent as logo_with_title } from "react-icons/bi";
+import { FaSignOutAlt as LogoutIcon } from "react-icons/fa";
+import { MdDashboard as DashboardIcon } from "react-icons/md";
+import { FaBook as BookIcon } from "react-icons/fa";
+import { GiBookshelf as CatalogIcon } from "react-icons/gi";
+import { FaUsers as UsersIcon } from "react-icons/fa";
+import { AiOutlineClose as CloseIcon } from "react-icons/ai";
+import { BiBookContent as LogoWithTitle } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 
-function Sidebar({ isSidebarOpen, setIsSidebarOpen, setselectedComponent }) {
+function Sidebar({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) {
   const dispatch = useDispatch();
-  // const {} = useSelector();
 
-  const { loading, error, message, user, isAuthenticated } = useSelector(
+  const { error, message, user, isAuthenticated } = useSelector(
     (state) => state.auth,
   );
 
-  const handlelogout = () => {
-    dispatch(logout);
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   useEffect(() => {
@@ -34,15 +31,129 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen, setselectedComponent }) {
       toast.success(message);
       dispatch(resetAuthSlice());
     }
-  }, [dispatch, isAuthenticated, error, loading, message]);
+  }, [dispatch, error, message]);
+
+  const menuItemClass =
+    "flex items-center gap-3 px-6 py-3 hover:bg-gray-800 transition-all duration-300 cursor-pointer";
 
   return (
-    <div>
-      <aside className={`${isSidebarOpen ? "left-0" : "-left-full"} z-10 transition-all duration-700 md:relative md:left-0 flex w-64 bg-black text-white flex-col h-full `} >
+    <>
+      {/* Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-opacity-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
-          dfadf
+      <aside
+        className={`fixed md:relative top-0 left-0 h-screen w-64 bg-black text-white 
+        transition-all duration-500 z-20
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        style={{ position: "fixed" }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-700">
+          <div className="flex items-center gap-2 text-xl font-semibold">
+            <LogoWithTitle className="text-2xl" />
+            <span>BookWare</span>
+          </div>
+
+          <CloseIcon
+            className="text-xl cursor-pointer md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        </div>
+
+        {/* User Info */}
+        <div className="px-6 py-4 border-b border-gray-700">
+          <div className="flex items-center gap-2">
+            <RiAdminFill className="text-xl" />
+            <div>
+              <p className="font-semibold">{user?.name}</p>
+              <p className="text-sm text-gray-400">{user?.role}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Menu */}
+        <div className="flex flex-col mt-4">
+          {/* Dashboard */}
+          <div
+            className={menuItemClass}
+            onClick={() => {
+              setSelectedComponent("Dashboard");
+              setIsSidebarOpen(false);
+            }}
+          >
+            <DashboardIcon />
+            <span>Dashboard</span>
+          </div>
+
+          {/* Books */}
+          <div
+            className={menuItemClass}
+            onClick={() => {
+              setSelectedComponent("Books");
+              setIsSidebarOpen(false);
+            }}
+          >
+            <BookIcon />
+            <span>Books</span>
+          </div>
+
+          {/* Admin Only */}
+          {isAuthenticated && user?.role === "Admin" && (
+            <>
+              <div
+                className={menuItemClass}
+                onClick={() => {
+                  setSelectedComponent("Catalog");
+                  setIsSidebarOpen(false);
+                }}
+              >
+                <CatalogIcon />
+                <span>Catalog</span>
+              </div>
+
+              <div
+                className={menuItemClass}
+                onClick={() => {
+                  setSelectedComponent("Users");
+                  setIsSidebarOpen(false);
+                }}
+              >
+                <UsersIcon />
+                <span>Users</span>
+              </div>
+            </>
+          )}
+
+          {/* User Only */}
+          {isAuthenticated && user?.role === "User" && (
+            <div
+              className={menuItemClass}
+              onClick={() => {
+                setSelectedComponent("My Borrowed Books");
+                setIsSidebarOpen(false);
+              }}
+            >
+              <BookIcon />
+              <span>My Borrowed Books</span>
+            </div>
+          )}
+
+          {/* Logout */}
+          <div
+            className={`${menuItemClass} absolute w-full bottom-0 border-t border-gray-700 `}
+            onClick={handleLogout}
+          >
+            <LogoutIcon />
+            <span>Logout</span>
+          </div>
+        </div>
       </aside>
-    </div>
+    </>
   );
 }
 
