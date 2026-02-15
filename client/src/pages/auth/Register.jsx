@@ -14,7 +14,7 @@ function Register() {
   const navigate = useNavigate();
 
   const { error, message, isAuthenticated } = useSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
 
   const handleRegister = (e) => {
@@ -30,6 +30,8 @@ function Register() {
 
   useEffect(() => {
     if (message) {
+      toast.success(message);
+      dispatch(resetAuthSlice());
       navigate(`/otp-verification/${email}`);
     }
     if (error) {
@@ -45,7 +47,7 @@ function Register() {
   return (
     <div className="min-h-screen flex">
       {/* LEFT SIDE IMAGE */}
-      <AuthLayout authInfo={"Create your"}/>
+      <AuthLayout authInfo={"Create your"} />
 
       {/* RIGHT SIDE FORM */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6">
