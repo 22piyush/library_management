@@ -13,7 +13,7 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, message, isAuthenticated } = useSelector(
+  const { error, message, isAuthenticated, loading } = useSelector(
     (state) => state.auth,
   );
 
@@ -38,7 +38,7 @@ function Register() {
       toast.error(error);
       dispatch(resetAuthSlice());
     }
-  }, [message, error, dispatch, navigate, email]);
+  }, [message, error, dispatch, navigate, email, loading]);
 
   if (isAuthenticated) {
     return <Navigate to="/" />;
@@ -100,6 +100,7 @@ function Register() {
             </div>
 
             <button
+              disabled={loading ? true : false}
               type="submit"
               className="cursor-pointer w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-300"
             >

@@ -11,7 +11,7 @@ function ForgotPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, message, isAuthenticated, user } = useSelector(
+  const { loading, error, message, isAuthenticated } = useSelector(
     (state) => state.auth,
   );
 
@@ -63,10 +63,11 @@ function ForgotPassword() {
             </div>
 
             <button
+              disabled={loading ? true : false}
               type="submit"
               className="cursor-pointer w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-300"
             >
-              Forgot Password
+              Reset Password
             </button>
           </form>
 

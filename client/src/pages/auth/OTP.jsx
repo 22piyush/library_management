@@ -10,8 +10,8 @@ function OTP() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, message, isAuthenticated } = useSelector(
-    (state) => state.auth
+  const { error, message, isAuthenticated,loading } = useSelector(
+    (state) => state.auth,
   );
 
   const [otpArray, setOtpArray] = useState(["", "", "", "", ""]);
@@ -58,7 +58,7 @@ function OTP() {
       toast.error(error);
       dispatch(resetAuthSlice());
     }
-  }, [message, error, dispatch]);
+  }, [message, error, dispatch,loading]);
 
   if (isAuthenticated) {
     return <Navigate to="/" />;
@@ -76,7 +76,8 @@ function OTP() {
             Enter OTP
           </h2>
           <p className="text-sm text-gray-500 text-center mb-6">
-            We sent a 5-digit code to <span className="font-medium">{email}</span>
+            We sent a 5-digit code to{" "}
+            <span className="font-medium">{email}</span>
           </p>
 
           <form onSubmit={handleOTPVerification} className="space-y-6">
@@ -97,6 +98,7 @@ function OTP() {
             </div>
 
             <button
+              disabled={loading ? true : false}
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-300"
             >
