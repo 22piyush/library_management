@@ -6,6 +6,8 @@ import { sendVerificationCode } from "../utils/sendVerificationCode.js";
 import { sendToken } from "../utils/sendToken.js";
 import { generateForgotPasswordEmailTemplate, generateVerificationOtpEmailTemplate } from "../utils/emailTemplates.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "node:crypto";
+import { createHash } from "node:crypto";
 
 
 export const register = catchAyncErrors(async (req, res, next) => {
@@ -202,8 +204,14 @@ export const forgotPassword = catchAyncErrors(async (req, res, next) => {
 
 export const resetPassword = catchAyncErrors(async (req, res, next) => {
 
-    const token = req.params;
+    console.log(req.params);
+    console.log(req.body);
+
+    const {token} = req.params;
     const resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    console.log(resetPasswordToken);
+    
 
     const user = await User.findOne({
         resetPasswordToken,

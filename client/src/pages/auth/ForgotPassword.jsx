@@ -22,7 +22,7 @@ function ForgotPassword() {
 
   useEffect(() => {
     if (message) {
-      // toast.success(message);
+      toast.success(message);
       dispatch(resetAuthSlice());
     }
     if (error) {
