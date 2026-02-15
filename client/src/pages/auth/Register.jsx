@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import { register, resetAuthSlice } from "../../store/slices/authSlice";
 import { toast } from "react-toastify";
+import AuthLayout from "../../layout/AuthLayout";
 
 function Register() {
   const [name, setName] = useState("");
@@ -44,19 +45,7 @@ function Register() {
   return (
     <div className="min-h-screen flex">
       {/* LEFT SIDE IMAGE */}
-      <div className="hidden md:flex md:w-1/2 relative">
-        <img
-          src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"
-          alt="Library"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white px-10 text-center">
-          <h1 className="text-4xl font-bold mb-4">Welcome to BookWare</h1>
-          <p className="text-lg">
-            Create your account and start managing your library efficiently.
-          </p>
-        </div>
-      </div>
+      <AuthLayout authInfo={"Create your"}/>
 
       {/* RIGHT SIDE FORM */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6">

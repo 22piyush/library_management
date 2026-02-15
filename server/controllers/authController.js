@@ -54,6 +54,7 @@ export const verifyOTP = catchAyncErrors(async (req, res, next) => {
 
     const { email, otp } = req.body;
 
+
     try {
         const userAllEntries = await User.find({
             email,
