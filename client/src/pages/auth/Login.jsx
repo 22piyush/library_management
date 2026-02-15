@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
-import { login } from "../../store/slices/authSlice";
+import { login, resetAuthSlice } from "../../store/slices/authSlice";
 import { toast } from "react-toastify";
 import AuthLayout from "../../layout/AuthLayout";
 
@@ -12,7 +12,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, message, isAuthenticated } = useSelector(
+  const { loading, error, message, isAuthenticated, user } = useSelector(
     (state) => state.auth,
   );
 
@@ -25,6 +25,21 @@ function Login() {
 
     dispatch(login(data));
   };
+
+  useEffect(() => {
+    if (message) {
+      // toast.success(message);
+      dispatch(resetAuthSlice());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(resetAuthSlice());
+    }
+  }, [message, error, dispatch, navigate, email]);
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="min-h-screen flex">

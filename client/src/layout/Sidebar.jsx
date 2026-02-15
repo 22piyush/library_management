@@ -153,6 +153,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) {
               <BookIcon />
               <span>My Borrowed Books</span>
             </div>
+
+            // dispatch(toggleSettingPopup())
           )}
 
           {/* Logout */}
