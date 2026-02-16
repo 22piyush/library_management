@@ -21,47 +21,33 @@ function Home() {
   }
 
   return (
-    <div className="relative md:pl-64 flex min-h-screen bg-gray-100">
-      <div
-        className="md:hidden z-10 absolute right-6 top-4 sm:top-6 
-        flex justify-center items-center bg-black rounded-md h-9 w-9 text-white"
-      >
-        <GiHamburgerMenu
-          className="text-2xl"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
-      </div>
+    <div className="flex min-h-screen bg-gray-100">
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         setSelectedComponent={setSelectedComponent}
       />
 
-      {(() => {
-        switch (selectedComponent) {
-          case "Dashboard":
-            return user?.role === "User" ? (
-              <UserDashboard />
-            ) : (
-              <AdminDashboard />
-            );
+      <div className="flex-1 md:ml-64 relative">
+        <div
+          className="md:hidden z-10 absolute right-6 top-4 
+        flex justify-center items-center bg-black rounded-md h-9 w-9 text-white"
+        >
+          <GiHamburgerMenu
+            className="text-2xl"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+        </div>
 
-          case "Books":
-            return <BookManagement />;
-
-          case "Catalog":
-            return user?.role === "Admin" ? <Catalog /> : null;
-
-          case "Users":
-            return user?.role === "Admin" ? <Users /> : null;
-
-          case "My Borrowed Books":
-            return user?.role === "User" ? <MyBorrowedBooks /> : null;
-
-          default:
-            return null;
-        }
-      })()}
+        {(() => {
+          switch (selectedComponent) {
+            case "Users":
+              return user?.role === "Admin" ? <Users /> : null;
+            default:
+              return null;
+          }
+        })()}
+      </div>
     </div>
   );
 }

@@ -38,15 +38,11 @@ function Header() {
   }, []);
 
   return (
-    <header className="absolute top-0 bg-white w-full py-4 px-6 left-0 shadow-md flex justify-between items-center">
-      
-      {/* Left Section */}
+    <header className="sticky top-0 bg-white w-full py-4 px-6 shadow-md flex justify-between items-center z-10">
       <div className="flex items-center gap-3">
         <FaUserCircle size={45} className="text-gray-600" />
         <div>
-          <h2 className="text-lg font-semibold">
-            Welcome, {user?.name}
-          </h2>
+          <h2 className="text-lg font-semibold">Welcome, {user?.name}</h2>
           <p className="text-sm text-gray-500">{user?.role}</p>
         </div>
       </div>
@@ -57,7 +53,11 @@ function Header() {
           <p className="text-lg font-semibold">{currentTime}</p>
           <p className="text-sm text-gray-500">{currentDate}</p>
         </div>
-        <IoSettingsSharp onClick={()=> toggleSettingPopup()} size={28} className="text-gray-600 cursor-pointer hover:text-black transition" />
+        <IoSettingsSharp
+          onClick={() => toggleSettingPopup()}
+          size={28}
+          className="text-gray-600 cursor-pointer hover:text-black transition"
+        />
       </div>
     </header>
   );
