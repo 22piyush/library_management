@@ -12,7 +12,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, message, isAuthenticated} = useSelector(
+  const { loading, error, message, isAuthenticated,} = useSelector(
     (state) => state.auth,
   );
 
@@ -29,6 +29,7 @@ function Login() {
   useEffect(() => {
     if (message) {
       // toast.success(message);
+      dispatch(getUser());
       dispatch(resetAuthSlice());
     }
     if (error) {

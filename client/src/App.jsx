@@ -14,10 +14,10 @@ import { fetchAllUsers } from "./store/slices/userSlice";
 function App() {
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(getUser());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (!loading && isAuthenticated && user?.role === "Admin") {

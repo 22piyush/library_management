@@ -12,7 +12,7 @@ import MyBorrowedBooks from "../components/MyBorrowedBooks";
 
 function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedComponent, setselectedComponent] = useState("");
+  const [selectedComponent, setSelectedComponent] = useState("");
 
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -34,7 +34,7 @@ function Home() {
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-        setselectedComponent={setselectedComponent}
+        setSelectedComponent={setSelectedComponent}
       />
 
       {(() => {
