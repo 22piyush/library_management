@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
-import { login, resetAuthSlice } from "../../store/slices/authSlice";
+import { getUser, login, resetAuthSlice } from "../../store/slices/authSlice";
 import { toast } from "react-toastify";
 import AuthLayout from "../../layout/AuthLayout";
 

@@ -9,16 +9,24 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./store/slices/authSlice";
+import { fetchAllUsers } from "./store/slices/userSlice";
 
 function App() {
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!loading && isAuthenticated && user?.role === "Admin") {
+      dispatch(fetchAllUsers());
+    }
+  }, [loading, isAuthenticated, user, dispatch]);
 
   if (loading) {
-    return <span class="loader absolute top-[50%] left-[50%]"></span>;
+    return <span className="loader absolute top-[50%] left-[50%]"></span>;
   }
 
   return (
