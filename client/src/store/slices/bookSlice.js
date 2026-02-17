@@ -11,6 +11,8 @@ const bookSlice = createSlice({
         books: [],
     },
     reducers: {
-
+        fetchBooksRequest(state) { },
+        fetchBooksSuccess(state) { },
+        fetchBooksFailed(state) { },
     }
 })
