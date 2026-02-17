@@ -27,7 +27,10 @@ const popupSlice = createSlice({
       state.returnBookPopup = !state.returnBookPopup;
     },
     toggleAddNewAdminPopup(state) {
+      console.log(state.addNewAdminPopup);
+      
       state.addNewAdminPopup = !state.addNewAdminPopup;
+       console.log(state.addNewAdminPopup);
     },
 
     // Optional: close all popups at once

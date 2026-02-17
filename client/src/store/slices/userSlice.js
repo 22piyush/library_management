@@ -32,6 +32,7 @@ const userSlice = createSlice({
         addNewAdminFailed(state) {
             state.loading = false;
         },
+
     },
 });
 
@@ -88,7 +89,6 @@ export const addNewAdmin = (formData) => async (dispatch) => {
         toast.error(error);
     }
 };
-
 
 
 export default userSlice.reducer;

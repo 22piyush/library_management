@@ -20,7 +20,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen, setSelectedComponent }) {
   const { addNewAdminPopup, settingPopup } = useSelector(
     (state) => state.popup,
   );
-
+  
   const { error, message, user, isAuthenticated } = useSelector(
     (state) => state.auth,
   );
