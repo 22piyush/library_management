@@ -11,8 +11,24 @@ const bookSlice = createSlice({
         books: [],
     },
     reducers: {
-        fetchBooksRequest(state) { },
-        fetchBooksSuccess(state) { },
-        fetchBooksFailed(state) { },
+        fetchBooksRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+
+        },
+        fetchBooksSuccess(state, action) {
+            state.loading = false;
+            state.books = action.payload;
+        },
+        fetchBooksFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+            state.message = null;
+        },
+
+        addBookRequest(state) { },
+        addBookSuccess(state, action) { },
+        addBookFailed(state, action) { },
     }
 });
