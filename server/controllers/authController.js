@@ -245,9 +245,15 @@ export const resetPassword = catchAyncErrors(async (req, res, next) => {
 
 export const updatePassword = catchAyncErrors(async (req, res, next) => {
 
+    console.log(req);
+    
+
     const user = await User.findById(req.user._id).select("+password");
 
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    console.log(currentPassword, newPassword, confirmNewPassword);
+    
 
     if (!currentPassword || !newPassword || !confirmNewPassword) {
         return next(new ErrorHandler("Please enter all fields", 400));

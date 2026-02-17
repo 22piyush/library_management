@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaUserCircle } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { toggleSettingPopup } from "../store/slices/popUpSlice";
@@ -9,6 +9,8 @@ function Header() {
 
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -54,7 +56,7 @@ function Header() {
           <p className="text-sm text-gray-500">{currentDate}</p>
         </div>
         <IoSettingsSharp
-          onClick={() => toggleSettingPopup()}
+          onClick={() => dispatch(toggleSettingPopup())}
           size={28}
           className="text-gray-600 cursor-pointer hover:text-black transition"
         />
