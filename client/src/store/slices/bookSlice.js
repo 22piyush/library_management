@@ -15,4 +15,4 @@ const bookSlice = createSlice({
         fetchBooksSuccess(state) { },
         fetchBooksFailed(state) { },
     }
-})
+});
