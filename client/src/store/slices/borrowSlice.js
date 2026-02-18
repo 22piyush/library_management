@@ -81,5 +81,79 @@ const borrowSlice = createSlice({
             state.message = null;
         },
 
+        resetBookSlice(state) {
+            state.loading = false;
+            state.error = null;
+            state.message = null;
+        }
+
     }
 });
+
+
+export const fetchUserBorrowedBook = async (dispatch) => {
+    dispatch(borrowSlice.actions.fetchUserBorrowedBooksRequest());
+    await axios.get("http://localhost:8080/api/v1/borrow/my-borrowed-books", {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => {
+        dispatch(borrowSlice.actions.fetchUserBorrowedBooksSuccess(res.data.borrowedBooks));
+    }).catch(error => {
+        dispatch(borrowSlice.actions.fetchUserBorrowedBooksFailed(error.response.data.message));
+    })
+};
+
+export const fetchAllBorrowedBook = async (dispatch) => {
+    dispatch(borrowSlice.actions.fetchAllBorrowedBooksRequest());
+    await axios.get("http://localhost:8080/api/v1/borrow/borrowed-books-by-users", {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => {
+        dispatch(borrowSlice.actions.fetchAllBorrowedBooksSuccess(res.data.borrowedBooks));
+    }).catch(error => {
+        dispatch(borrowSlice.actions.fetchAllBorrowedBooksFailed(error.response.data.message));
+    })
+};
+
+
+export const returnBook = (email, id) => async (dispatch) => {
+    dispatch(borrowSlice.actions.returnBookRequest());
+
+    await axios.put(
+        `http://localhost:8080/api/v1/borrow/return-borrowed-book/${id}`,
+        {email},
+        {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        }
+    )
+        .then(res => {
+            dispatch(borrowSlice.actions.returnBookSuccess(res.data.message));
+        })
+        .catch(error => {
+            dispatch(
+                borrowSlice.actions.returnBookFailed(
+                    error.response?.data?.message || "Something went wrong"
+                )
+            );
+        });
+};
+
+
+export const recordBorrowBook = (email, id) => async (dispatch) => {
+    dispatch(borrowSlice.actions.recordBookRequest());
+    await axios.post(`http://localhost:8080/api/v1/borrow/record-borrow-book/${id}`, {email}, {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => {
+        dispatch(borrowSlice.actions.recordBookSuccess(res.data.message));
+    }).catch(error => {
+        dispatch(borrowSlice.actions.recordBookFailed(error.response.data.message));
+    })
+};
