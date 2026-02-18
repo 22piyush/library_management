@@ -78,3 +78,6 @@ export const addBook = (data) => async (dispatch) => {
         dispatch(bookSlice.actions.addBookFailed(error.response.data.message));
     })
 };
+
+
+export default bookSlice.reducer;
