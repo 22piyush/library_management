@@ -27,8 +27,24 @@ const bookSlice = createSlice({
             state.message = null;
         },
 
-        addBookRequest(state) { },
-        addBookSuccess(state, action) { },
-        addBookFailed(state, action) { },
+        addBookRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        addBookSuccess(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+        addBookFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+
+        resetBookSlice(state) {
+            state.error = null;
+            state.message = null;
+            state.loading = false;
+        }
     }
 });
