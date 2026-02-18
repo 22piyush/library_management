@@ -157,3 +157,11 @@ export const recordBorrowBook = (email, id) => async (dispatch) => {
         dispatch(borrowSlice.actions.recordBookFailed(error.response.data.message));
     })
 };
+
+
+export const resetBookSlice =()=>(dispatch) => {
+    dispatch(borrowSlice.actions.resetBookSlice());
+}
+
+
+export default borrowSlice.reducer;
