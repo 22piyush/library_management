@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleReadBookPopup } from "../store/slices/popUpSlice";
+import { toggleReadBookPopup, toggleRecordBookPopup } from "../store/slices/popUpSlice";
+import { toast } from "react-toastify";
+import { fetchAllBooks, resetBookSlice } from "../store/slices/bookSlice";
+import { fetchAllBorrowedBook, resetBorrowSlice } from "../store/slices/borrowSlice";
 
 function BookManagement() {
   const dispatch = useDispatch();
@@ -24,7 +27,21 @@ function BookManagement() {
     dispatch(toggleReadBookPopup());
   };
 
-  const [borrowBookId, setBorrowBookId]
+  const [borrowBookId, setBorrowBookId] = useState("");
+  const openRecordBookPopup = (bookId) => {
+    setBorrowBookId(bookId);
+    dispatch(toggleRecordBookPopup());
+  }
+
+  useEffect(()=>{
+    if(message || borrowSliceMessage){
+      toast.success(message || borrowSliceMessage);
+      dispatch(fetchAllBooks());
+      dispatch(fetchAllBorrowedBook());
+      dispatch(resetBorrowSlice());
+      dispatch(resetBookSlice());
+    }
+  }, []);
 
   return <div>BookManagement</div>;
 }
