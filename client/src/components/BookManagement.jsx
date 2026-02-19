@@ -62,7 +62,27 @@ function BookManagement() {
     borrowSliceMessage,
   ]);
 
-  return <div>BookManagement</div>;
+  const [searchedKeyword, setSearchedKeyword] = useState("");
+
+  const handleSearch = (e) => {
+    setSearchedKeyword(e.target.value.toLowerCase());
+  };
+
+  const searchedBooks = book.filter((book) => {
+    book.title.toLowerCase().includes(searchedKeyword);
+  });
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+
+      <div className="p-6">
+        <h1 className="text-2xl font-semibold mb-6 text-gray-800">
+          Users Management
+        </h1>
+      </div>
+    </div>
+  );
 }
 
 export default BookManagement;
