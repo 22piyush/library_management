@@ -47,7 +47,20 @@ function BookManagement() {
       dispatch(resetBorrowSlice());
       dispatch(resetBookSlice());
     }
-  }, []);
+    if (error || borrowSliceError) {
+      toast.success(error || borrowSliceError);
+      dispatch(resetBorrowSlice());
+      dispatch(resetBookSlice());
+    }
+  }, [
+    dispatch,
+    message,
+    error,
+    loading,
+    borrowSliceError,
+    borrowSliceLoading,
+    borrowSliceMessage,
+  ]);
 
   return <div>BookManagement</div>;
 }
