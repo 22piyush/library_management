@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleReadBookPopup, toggleRecordBookPopup } from "../store/slices/popUpSlice";
+import {
+  toggleReadBookPopup,
+  toggleRecordBookPopup,
+} from "../store/slices/popUpSlice";
 import { toast } from "react-toastify";
 import { fetchAllBooks, resetBookSlice } from "../store/slices/bookSlice";
-import { fetchAllBorrowedBook, resetBorrowSlice } from "../store/slices/borrowSlice";
+import {
+  fetchAllBorrowedBook,
+  resetBorrowSlice,
+} from "../store/slices/borrowSlice";
 
 function BookManagement() {
   const dispatch = useDispatch();
@@ -31,10 +37,10 @@ function BookManagement() {
   const openRecordBookPopup = (bookId) => {
     setBorrowBookId(bookId);
     dispatch(toggleRecordBookPopup());
-  }
+  };
 
-  useEffect(()=>{
-    if(message || borrowSliceMessage){
+  useEffect(() => {
+    if (message || borrowSliceMessage) {
       toast.success(message || borrowSliceMessage);
       dispatch(fetchAllBooks());
       dispatch(fetchAllBorrowedBook());
