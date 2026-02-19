@@ -6,7 +6,7 @@ function MyBorrowedBooks() {
 
   // Book slice
   const { books } = useSelector((state) => state.book);
-  const {} = useSelector(state => state.borrow);
+  const { userBorrowedBooks } = useSelector((state) => state.borrow);
 
   return <div>MyBorrowedBooks</div>;
 }
