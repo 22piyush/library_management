@@ -8,6 +8,8 @@ function MyBorrowedBooks() {
   const { books } = useSelector((state) => state.book);
   const { userBorrowedBooks } = useSelector((state) => state.borrow);
 
+  const { readBookPopup } = useSelector((state) => state.popup);
+
   return <div>MyBorrowedBooks</div>;
 }
 
