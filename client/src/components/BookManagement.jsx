@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function BookManagement() {
-  return (
-    <div>BookManagement</div>
-  )
+  const dispatch = useDispatch();
+
+  const { loading, error, message, books } = useSelector((state) => state.book);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+
+  return <div>BookManagement</div>;
 }
 
-export default BookManagement
+export default BookManagement;
