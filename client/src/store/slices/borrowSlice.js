@@ -105,19 +105,34 @@ export const fetchUserBorrowedBook = async (dispatch) => {
     })
 };
 
-export const fetchAllBorrowedBook = async (dispatch) => {
+export const fetchAllBorrowedBook = () => async (dispatch) => {
     dispatch(borrowSlice.actions.fetchAllBorrowedBooksRequest());
-    await axios.get("http://localhost:8080/api/v1/borrow/borrowed-books-by-users", {
-        withCredentials: true,
-        headers: {
-            "Content-Type": "application/json",
-        }
-    }).then(res => {
-        dispatch(borrowSlice.actions.fetchAllBorrowedBooksSuccess(res.data.borrowedBooks));
-    }).catch(error => {
-        dispatch(borrowSlice.actions.fetchAllBorrowedBooksFailed(error.response.data.message));
-    })
+
+    try {
+        const res = await axios.get(
+            "http://localhost:8080/api/v1/borrow/borrowed-books-by-users",
+            {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        dispatch(
+            borrowSlice.actions.fetchAllBorrowedBooksSuccess(
+                res.data.borrowedBooks
+            )
+        );
+    } catch (error) {
+        dispatch(
+            borrowSlice.actions.fetchAllBorrowedBooksFailed(
+                error.response?.data?.message || "Something went wrong"
+            )
+        );
+    }
 };
+
 
 
 export const returnBook = (email, id) => async (dispatch) => {

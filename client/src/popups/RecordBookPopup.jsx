@@ -1,6 +1,6 @@
 import React from 'react'
 
-function RecordBookPopup() {
+function RecordBookPopup({book}) {
   return (
     <div>RecordBookPopup</div>
   )

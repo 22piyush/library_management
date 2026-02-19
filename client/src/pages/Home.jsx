@@ -14,6 +14,8 @@ function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState("");
 
+  console.log(selectedComponent);
+
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
@@ -43,6 +45,8 @@ function Home() {
           switch (selectedComponent) {
             case "Users":
               return user?.role === "Admin" ? <Users /> : null;
+            case "Books":
+              return <BookManagement/>;
             default:
               return null;
           }

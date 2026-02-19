@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function MyBorrowedBooks() {
-  return (
-    <div>MyBorrowedBooks</div>
-  )
+  const dispatch = useDispatch();
+
+  // Book slice
+  const { books } = useSelector((state) => state.book);
+  const {} = useSelector(state => state.borrow);
+
+  return <div>MyBorrowedBooks</div>;
 }
 
-export default MyBorrowedBooks
+export default MyBorrowedBooks;

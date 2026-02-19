@@ -50,19 +50,32 @@ const bookSlice = createSlice({
 });
 
 
-export const fetchAllBooks = async (dispatch) => {
+export const fetchAllBooks = () => async (dispatch) => {
     dispatch(bookSlice.actions.fetchBooksRequest());
-    await axios.get("http://localhost:8080/api/v1/book/all", {
-        withCredentials: true,
-        headers: {
-            "Content-Type": "application/json",
-        }
-    }).then(res => {
-        dispatch(bookSlice.actions.fetchBooksSuccess(res.data.books));
-    }).catch(error => {
-        dispatch(bookSlice.actions.fetchBooksFailed(error.response.data.message));
-    })
+
+    try {
+        const res = await axios.get(
+            "http://localhost:8080/api/v1/book/all",
+            {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        dispatch(
+            bookSlice.actions.fetchBooksSuccess(res.data.books)
+        );
+    } catch (error) {
+        dispatch(
+            bookSlice.actions.fetchBooksFailed(
+                error.response?.data?.message || "Something went wrong"
+            )
+        );
+    }
 };
+
 
 
 export const addBook = (data) => async (dispatch) => {
