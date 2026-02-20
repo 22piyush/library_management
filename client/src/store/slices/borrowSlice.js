@@ -91,18 +91,32 @@ const borrowSlice = createSlice({
 });
 
 
-export const fetchUserBorrowedBook = async (dispatch) => {
+export const fetchUserBorrowedBook = () => async (dispatch) => {
     dispatch(borrowSlice.actions.fetchUserBorrowedBooksRequest());
-    await axios.get("http://localhost:8080/api/v1/borrow/my-borrowed-books", {
-        withCredentials: true,
-        headers: {
-            "Content-Type": "application/json",
-        }
-    }).then(res => {
-        dispatch(borrowSlice.actions.fetchUserBorrowedBooksSuccess(res.data.borrowedBooks));
-    }).catch(error => {
-        dispatch(borrowSlice.actions.fetchUserBorrowedBooksFailed(error.response.data.message));
-    })
+
+    try {
+        const res = await axios.get(
+            "http://localhost:8080/api/v1/borrow/my-borrowed-books",
+            {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        dispatch(
+            borrowSlice.actions.fetchUserBorrowedBooksSuccess(
+                res.data.borrowedBooks
+            )
+        );
+    } catch (error) {
+        dispatch(
+            borrowSlice.actions.fetchUserBorrowedBooksFailed(
+                error.response?.data?.message || "Something went wrong"
+            )
+        );
+    }
 };
 
 export const fetchAllBorrowedBook = () => async (dispatch) => {
@@ -140,7 +154,7 @@ export const returnBook = (email, id) => async (dispatch) => {
 
     await axios.put(
         `http://localhost:8080/api/v1/borrow/return-borrowed-book/${id}`,
-        {email},
+        { email },
         {
             withCredentials: true,
             headers: { "Content-Type": "application/json" }
@@ -161,7 +175,7 @@ export const returnBook = (email, id) => async (dispatch) => {
 
 export const recordBorrowBook = (email, id) => async (dispatch) => {
     dispatch(borrowSlice.actions.recordBookRequest());
-    await axios.post(`http://localhost:8080/api/v1/borrow/record-borrow-book/${id}`, {email}, {
+    await axios.post(`http://localhost:8080/api/v1/borrow/record-borrow-book/${id}`, { email }, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -174,7 +188,7 @@ export const recordBorrowBook = (email, id) => async (dispatch) => {
 };
 
 
-export const resetBorrowSlice =()=>(dispatch) => {
+export const resetBorrowSlice = () => (dispatch) => {
     dispatch(borrowSlice.actions.resetBorrowSlice());
 }
 
