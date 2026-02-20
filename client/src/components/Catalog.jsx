@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function Catalog() {
-  return (
-    <div>Catalog</div>
-  )
+  const dispatch = useDispatch();
+
+  const { returnBookPopup } = useSelector((state) => state.popup);
+  const { loading, error, message, userBorrowedBooks, allBorrowedBooks } = useSelector((state) => state.borrow);
+
+  return <div>Catalog</div>;
 }
 
-export default Catalog
+export default Catalog;
