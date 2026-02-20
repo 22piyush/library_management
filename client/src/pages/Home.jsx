@@ -49,6 +49,12 @@ function Home() {
               return user?.role === "Admin" ? <Catalog /> : null;
             case "Books":
               return <BookManagement />;
+            case "Dashboard":
+              return user?.role === "User" ? (
+                <UserDashboard />
+              ) : (
+                <AdminDashboard />
+              );
             case "My Borrowed Books":
               return user?.role === "User" ? <MyBorrowedBooks /> : null;
             default:
