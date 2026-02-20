@@ -45,6 +45,8 @@ function Home() {
           switch (selectedComponent) {
             case "Users":
               return user?.role === "Admin" ? <Users /> : null;
+            case "Catalog":
+              return user?.role === "Admin" ? <Catalog /> : null;
             case "Books":
               return <BookManagement />;
             case "My Borrowed Books":
