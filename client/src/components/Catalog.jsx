@@ -7,6 +7,10 @@ function Catalog() {
   const { returnBookPopup } = useSelector((state) => state.popup);
   const { loading, error, message, userBorrowedBooks, allBorrowedBooks } = useSelector((state) => state.borrow);
 
+  const currentDate = new Date();
+
+  const 
+
   return <div>Catalog</div>;
 }
 
