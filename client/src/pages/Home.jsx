@@ -48,7 +48,7 @@ function Home() {
             case "Books":
               return <BookManagement />;
             case "My Borrowed Books":
-              return user?.role === "Users" ? <MyBorrowedBooks /> : null;
+              return user?.role === "User" ? <MyBorrowedBooks /> : null;
             default:
               return null;
           }

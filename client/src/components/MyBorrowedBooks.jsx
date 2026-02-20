@@ -35,6 +35,9 @@ function MyBorrowedBooks() {
   const booksToDisplay =
     filter === "returned" ? returnedBooks : nonReturnedBooks;
 
+    console.log(booksToDisplay);
+    
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
