@@ -10,53 +10,75 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-// Register required components
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function UserDashboard() {
-  const data = {
-    labels: ["January", "February", "March"],
-    datasets: [
-      {
-        label: "Sales",
-        data: [10, 20, 15],
-        backgroundColor: "blue",
-      },
-    ],
-  };
-
-  const { settingPopup } = useSelector((state) => state.popup);
   const { userBorrowedBooks } = useSelector((state) => state.borrow);
 
   const [totalBorrowedBooks, setTotalBorrowedBooks] = useState(0);
   const [totalReturnedBooks, setTotalReturnedBooks] = useState(0);
 
   useEffect(() => {
-    let numberOfTotalBorrowedBooks = userBorrowedBooks.filter(
-      (book) => book.returned === false,
+    const borrowed = userBorrowedBooks.filter(
+      (book) => book.returned === false
     );
-    let numberOfTotalReturnedBooks = userBorrowedBooks.filter(
-      (book) => book.returned === false,
+
+    const returned = userBorrowedBooks.filter(
+      (book) => book.returned === true
     );
-    setTotalBorrowedBooks(numberOfTotalBorrowedBooks.length);
-    setTotalReturnedBooks(numberOfTotalReturnedBooks.length);
+
+    setTotalBorrowedBooks(borrowed.length);
+    setTotalReturnedBooks(returned.length);
   }, [userBorrowedBooks]);
 
-
-  const data ={ 
-    labels: ["Total Borrowed Books", "Total Returned Books"],
-    datasets:[
+  const chartData = {
+    labels: ["Borrowed Books", "Returned Books"],
+    datasets: [
       {
-        data:[totalBorrowedBooks, totalReturnedBooks]
-        backgroundColor:[],
-        hoverOffset: 4
-      }
-    ]
-  }
+        label: "Library Statistics",
+        data: [totalBorrowedBooks, totalReturnedBooks],
+        backgroundColor: ["#6366F1", "#10B981"],
+        borderRadius: 8,
+      },
+    ],
+  };
 
   return (
-    <div style={{ width: "500px" }}>
-      <Bar data={data} />
+    <div className="min-h-screen bg-gray-100 p-6">
+      {/* Title */}
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">
+        User Dashboard
+      </h1>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {/* Borrowed Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          <p className="text-gray-500">Total Borrowed Books</p>
+          <h2 className="text-3xl font-bold text-indigo-600 mt-2">
+            {totalBorrowedBooks}
+          </h2>
+        </div>
+
+        {/* Returned Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+          <p className="text-gray-500">Total Returned Books</p>
+          <h2 className="text-3xl font-bold text-green-600 mt-2">
+            {totalReturnedBooks}
+          </h2>
+        </div>
+      </div>
+
+      {/* Chart Section */}
+      <div className="bg-white p-6 rounded-2xl shadow-md">
+        <h2 className="text-lg font-semibold mb-4 text-gray-700">
+          Borrow Statistics
+        </h2>
+
+        <div className="w-full md:w-[600px]">
+          <Bar data={chartData} />
+        </div>
+      </div>
     </div>
   );
 }
