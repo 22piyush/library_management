@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Chart as ChartJS,
   BarElement,
@@ -23,6 +24,11 @@ function UserDashboard() {
       },
     ],
   };
+
+  const { settingPopup } = useSelector((state) => state.popup);
+  const { userBorrowedBooks } = useSelector((state) => state.borrow);
+
+  const [] = useState(0)
 
   return (
     <div style={{ width: "500px" }}>
